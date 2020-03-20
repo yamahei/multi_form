@@ -1,0 +1,93 @@
+<page>
+
+    <div class="page_container container">
+
+        <section class="page_header">
+            <h1>{ page.title }</h1>
+            <p>{ page.description }</p>
+        </section>
+
+        <section class="page_content">
+            <div each={form, i in page.forms} formnum={i} class="form_item">
+                <text if={is_text(form)} event={event} setting={form} value={get_form_value(i)}></text>
+                <date if={is_date(form)} event={event} setting={form} value={get_form_value(i)}></date>
+            </div>
+        </section>
+
+        <!-- TODO: componentize footer. -->
+        <section class="page_footer">
+            <div class="back_button">
+                <button class="button"
+                    if={!isfirstpage} onclick={on_back}>BACK</button>
+            </div>
+            <div class="send_button">
+                <button class="button"
+                    if={islastpage} onclick={on_send}>SEND</button>
+            </div>
+            <div class="next_button">
+                <button class="button"
+                    if={!islastpage} onclick={on_next}>NEXT</button>
+            </div>
+        </section>
+    </div>
+
+    <style>
+        .form_item {
+            border: solid 1px;
+        }
+    </style>
+
+    <script>
+
+        const self = this;
+        self.id     = self.opts.pageid;
+        self.event  = self.opts.event || {};
+        self.values = self.opts.values || {};
+
+        self.pagenum   = self.opts.pagenum;
+        self.isfirstpage = self.opts.isfirstpage;
+        self.islastpage  = self.opts.islastpage;
+        self.page  = self.opts.page;
+        self.forms = self.page.forms || [];
+
+        self._is_type = function(typedef, form){
+            return typedef.split(",")
+            .indexOf(form.type) >= 0 ? true : false;
+        };
+        self.is_text = function(form){ return self._is_type(TYPE_TEXTS, form); };
+        self.is_date = function(form){ return self._is_type(TYPE_DATES, form); };
+
+        self.get_form_value = function(formnum){
+            const form = self.forms[formnum];
+            return self.values[form.uniqid] || '';
+        };
+        self.page_is_valid = function(callback){
+            const validateds = {};
+            self.event.trigger(EVENT_VALID, validateds);
+            const is_valid = self.page.forms
+                .map((form)=>{ return form.uniqid; })
+                .map((id)=>{ return validateds[id].is_valid; })
+                .every((is_valid)=>{ return is_valid; });
+            if(is_valid){
+                callback();
+            }
+        };
+
+        self.on_back = function(){
+            // no check
+            self.event.trigger(EVENT_BACK, self.pagenum);
+        };
+        self.on_next = function(){
+            self.page_is_valid(()=>{
+                self.event.trigger(EVENT_NEXT, self.pagenum);
+            });
+        };
+        self.on_send = function(){
+            self.page_is_valid(()=>{
+                self.event.trigger(EVENT_SEND);
+            });
+        };
+
+    </script>
+
+</page>

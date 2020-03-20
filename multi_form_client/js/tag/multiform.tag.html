@@ -1,0 +1,126 @@
+<multiform>
+
+    <div class="multiform_container container">
+
+        <!-- first page -->
+        <markdown class="as_page" if={!!config.firstpage}
+            id="firstpage" pageid="firstpage"
+            event={event}
+            pagenum={-1}
+            page={config.firstpage}
+            isfirstpage={true}
+            islastpage={false}
+        ></markdown>
+
+        <!-- form pages -->
+        <page class="as_page" each={page, i in pages}
+            id={get_pageid(i)} pageid={get_pageid(i)}
+            event={event}
+            pagenum={i}
+            page={page}
+            values={values}
+            isfirstpage={is_first_page(i)}
+            islastpage={is_last_page(i)}
+        ></page>
+
+        <!-- TODO: last page -->
+        <markdown class="as_page" if={!!config.lastpage}
+            id="lastpage" pageid="lastpage"
+            event={event}
+            pagenum={pages.length}
+            page={config.lastpage}
+            isfirstpage={false}
+            islastpage={true}
+        ></markdown>
+
+    </div>
+
+
+    <style>
+    </style>
+
+
+    <script>
+        const self = this;
+        self.biz = self.opts.biz || {};
+        self.event = self.opts.event || {};
+
+        self.config = self.opts.config
+        self.pages = self.config.pages || [];
+        self.values = self.config.values || {};
+        self.get_pageid = function(page_index){
+            if(page_index <= -1){
+                return "firstpage";
+            }else if(self.pages.length <= page_index){
+                return "lastpage";
+            }else{
+                return `page${page_index}`;
+            }
+        };
+        self.is_first_page = function(page_index){
+            const has_first_page = !!self.config.firstpage;
+            return has_first_page ? false : (page_index === 0);
+        };
+        self.is_last_page = function(page_index){
+            const last_index = self.pages.length - 1;
+            const has_last_page = !!self.config.lastpage;
+            return has_last_page ? false : (page_index === last_index);
+        };
+        self.paging = function(from_pagenum, to_pagenum){
+            if(from_pagenum == to_pagenum){ return; }
+
+            const from_pageid = self.get_pageid(from_pagenum);
+            const to_pageid = self.get_pageid(to_pagenum);
+            const from_page = `#${from_pageid}`;
+            const to_page = `#${to_pageid}`;
+
+            const $from = $(from_page);
+            const $to = $(to_page);
+            const direction = (from_pagenum < to_pagenum) ? -1 : 1;
+            const duration = 0.2 * 1000;//ms
+
+            $from
+                .prop("disabeld", true)
+                .css({left: "0%"})
+                .show()
+                .animate(
+                    { left: `${direction * 100}%` },
+                    duration, "swing",
+                    function(){ $from.hide(); }
+                );
+            $to
+                .prop("disabeld", true)
+                .css({left: `${-direction * 100}%`})
+                .show()
+                .animate(
+                    {left: "0%"}, 
+                    duration, "swing",
+                    function(){ $to.prop("disabeld", false); }
+                );          
+        };
+        self.event.on(EVENT_BACK, function(pagenum){
+            const start_index = (!!self.config.firstpage ? -1 : 0);
+            if(start_index < pagenum){
+                self.paging(pagenum, pagenum - 1);
+            }
+        });
+        self.event.on(EVENT_NEXT, function(pagenum){
+            const last_index = self.pages.length - (!!self.config.lastpage ? 0 : 1);
+            //TODO: has last page
+            if(pagenum < last_index){
+                self.paging(pagenum, pagenum + 1);
+            }
+        });
+        self.event.on(EVENT_SEND, function(pagenum){
+            console.log("TODO: " + pagenum);
+        });
+
+        self.on('mount', ()=>{
+            const page_index = !!self.config.firstpage ? -1 : 0;
+            const pageid = self.get_pageid(page_index);
+            $(`#${pageid}`).show();
+        });
+
+</script>
+
+</multiform>

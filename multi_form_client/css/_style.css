@@ -1,0 +1,23 @@
+.multiform_container 
+.multiform_container {}
+
+.multiform_container .page_container {
+    margin: 0;
+    padding: 1rem 2rem;
+    /*debug*/
+    border: solid 1px dotted gray;    
+}
+
+.multiform_container .page_container .page_header{}
+
+.multiform_container .page_container .page_content{}
+.multiform_container .page_container .page_content .form_item{}
+.multiform_container .page_container .page_content .form_item .form_block{}
+.multiform_container .page_container .page_content .form_item .form_block .form_label{}
+.multiform_container .page_container .page_content .form_item .form_block .form_elem{}
+
+.multiform_container .page_container .page_footer{}
+.multiform_container .page_container .page_footer .back_button{}
+.multiform_container .page_container .page_footer .send_button{}
+.multiform_container .page_container .page_footer .next_button{}
+

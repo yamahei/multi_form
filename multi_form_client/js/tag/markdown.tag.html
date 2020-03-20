@@ -1,0 +1,73 @@
+<markdown>
+
+    <div class="page_container container">
+
+        <section class="page_header">
+            <h1>{ page.title }</h1>
+        </section>
+
+        <section class="page_content">
+        </section>
+
+        <!-- TODO: componentize footer. -->
+        <section class="page_footer">
+            <div class="back_button">
+                <button class="button"
+                    if={!isfirstpage} onclick={on_back}>BACK</button>
+            </div>
+            <div class="send_button">
+                <button class="button"
+                    if={islastpage} onclick={on_send}>SEND</button>
+            </div>
+            <div class="next_button">
+                <button class="button"
+                    if={!islastpage} onclick={on_next}>NEXT</button>
+            </div>
+        </section>
+    </div>
+
+    <style>
+        .form_item {
+            border: solid 1px;
+        }
+    </style>
+
+    <script>
+
+        const self = this;
+        self.id     = self.opts.pageid;
+        self.event  = self.opts.event || {};
+
+        self.pagenum     = self.opts.pagenum;
+        self.isfirstpage = self.opts.isfirstpage;
+        self.islastpage  = self.opts.islastpage;
+        self.page        = self.opts.page;
+
+        
+
+        self.on_back = function(){
+            // no check
+            self.event.trigger(EVENT_BACK, self.pagenum);
+        };
+        self.on_next = function(){
+            // no check
+            self.event.trigger(EVENT_NEXT, self.pagenum);
+        };
+        self.on_send = function(){
+            // no check
+            self.event.trigger(EVENT_SEND);
+        };
+
+        self.on('mount', ()=>{
+            console.log(self.page);
+            const content = self.page.content;
+            if(content){
+                const $content = $(`#${self.pageid} page_content`);
+                const html = markdown.toHTML(content);
+                $content.innerHTML = html;
+            }
+        });
+
+    </script>
+
+</markdown>

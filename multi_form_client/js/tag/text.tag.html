@@ -1,0 +1,57 @@
+<text>
+
+    <div class="form_block">
+        <div if={setting.label} class="form_label form_label_text">
+            <label class="label" for={id}>
+                { setting.label }
+                <span if={setting.required} class="icon is-small is-right">
+                    📌<!-- TODO: to config -->
+                </span>
+            </label>
+        </div>
+        <div class="control has-icons-right form_elem form_elem_text">
+            <input id={id} type={setting.type}
+                class={input: true, is-danger: !is_valid}
+                required={setting.required || false}
+                maxlength={setting.maxlength || false}
+                pattern={setting.pattern || false}
+                onChange={validate}
+                value={value}
+            ></input>
+            <span if={!is_valid} class="icon is-small is-right">
+                ⚠️<!-- TODO: to config -->
+            </span>
+            <p class="help is-danger">{message}</p>
+        </div>
+    </div>
+
+
+    <script>
+
+        //必須
+        const self = this;
+        self.event   = self.opts.event || {};
+        self.setting = self.opts.setting;
+        self.value   = self.opts.value || '';
+        self.id      = self.setting.uniqid;
+
+        self.is_valid= true;
+        self.message = "";
+
+        self.validate = function(){
+            const $form = $(`#${self.id}`);
+            self.is_valid = $form.is(":valid");
+            self.value = $form.val();
+            self.message = self.is_valid ? "" : $form[0].validationMessage;
+        };
+        self.event.on(EVENT_VALID, function(container){
+            self.validate();
+            container[self.id] = {
+                is_valid: self.is_valid,
+                value: self.is_valid ? self.value : null,
+            };
+        });
+
+    </script>
+
+</text>
