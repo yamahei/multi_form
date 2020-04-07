@@ -21,17 +21,23 @@ const TYPE_LISTS = "radio,checkbox";
  * [debug] sample config
  */
 ((g)=>{
+    // form setting. TODO: given from server.
     const config = {
-        //TODO: values: "https://hoge.fug.com/$1/$2"
+
+        // default values: posted to this form.
         values: {
             //aaa: 1,
         },
+        // URL to send the inputed form data.
         sendto: "http://url.to.send.values?or=empty",
+        // URL to transits after posted.
         transfer: "http://url.to.next.page?or=empty",
+        // a page before forms.
         // firstpage: {
         //     title: "This is first page.",
         //     content: "# hello, markdown \n\n hogehogeho-",
         // },
+        // a page after forms.
         // lastpage: {
         //     title: "This is last page.",
         //     content: "# good-by, markdown \n\n hogehogeho-",
