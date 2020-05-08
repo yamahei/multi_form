@@ -43,6 +43,10 @@
         self.islastpage  = self.opts.islastpage;
         self.page        = self.opts.page;
 
+        self.pageid      = null;
+        if(self.isfirstpage){ self.pageid = 'firstpage'; }
+        if(self.islastpage){ self.pageid = 'lastpage'; }
+
         
 
         self.on_back = function(){
@@ -62,9 +66,9 @@
             console.log(self.page);
             const content = self.page.content;
             if(content){
-                const $content = $(`#${self.pageid} page_content`);
+                const $content = $(`#${self.pageid} .page_content`);
                 const html = markdown.toHTML(content);
-                $content.innerHTML = html;
+                $content.html(html);
             }
         });
 

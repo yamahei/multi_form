@@ -33,15 +33,15 @@ const TYPE_LISTS = "radio,checkbox";
         // URL to transits after posted.
         transfer: "http://url.to.next.page?or=empty",
         // a page before forms.
-        // firstpage: {
-        //     title: "This is first page.",
-        //     content: "# hello, markdown \n\n hogehogeho-",
-        // },
+        firstpage: {
+            title: "This is first page.",
+            content: "# hello, markdown \n\n hogehogeho-",
+        },
         // a page after forms.
-        // lastpage: {
-        //     title: "This is last page.",
-        //     content: "# good-by, markdown \n\n hogehogeho-",
-        // },
+        lastpage: {
+            title: "This is last page.",
+            content: "# good-by, markdown \n\n hogehogeho-",
+        },
         pages: [{//page object
             title: "サンプルです",
             description: "全てのフォームをガンバリマス",
@@ -50,14 +50,14 @@ const TYPE_LISTS = "radio,checkbox";
                     type: "text",//*required
                     uniqid: "aaa",//*required || page0_form0_text
                     label: "「text」です",
-                    required: true,
+                    //required: true,
                     maxlength: 10,
                     pattern: '^https?://.*$',
                 },
                 {
                     type: "text",//*required
                     uniqid: "page0_form1_text",//*required || page0_form0_text
-                    required: true,
+                    //required: true,
                 },
                 {
                     type: "date",//*required
